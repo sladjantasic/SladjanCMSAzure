@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SladjanCMSAzure.Models.Device>
+﻿@model IEnumerable<DeviceIndex>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,11 +7,14 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add a device</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IsConnected)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -19,35 +22,35 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsConnected)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                Change status
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsConnected)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <vc:status device-id="@item.Id" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="@item.Id" asp-for="@item.IsConnected" onclick="location.href='@Url.Action("ToggleDeviceStatus", "Devices", new { id = item.Id } )'">
+                        <label class="custom-control-label" for="@item.Id"></label>
+                    </div>
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Remove device</a>
+                </td>
+
+            </tr>
+        }
     </tbody>
 </table>

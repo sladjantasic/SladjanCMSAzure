@@ -2,45 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SladjanCMSAzure.Models;
+using SladjanCMSAzure.Models.ViewModels;
+using SladjanCMSAzure.Services;
 
 namespace SladjanCMSAzure.Controllers
 {
     public class DevicesController : Controller
     {
-        private readonly SQLdbContext _context;
+        private readonly IMapper mapper;
+        //private readonly UserManager<User> userManager;
+        private readonly ISqlService sqlService;
 
-        public DevicesController(SQLdbContext context)
+        public DevicesController(IMapper mapper, ISqlService sqlService)
         {
-            _context = context;
+            this.mapper = mapper;
+            //this.userManager = userManager;
+            this.sqlService = sqlService;
         }
 
         // GET: Devices
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Devices.ToListAsync());
+           
+            var viewModel = await mapper.ProjectTo<DeviceIndex>(sqlService.GetAllDevices()).ToListAsync();
+
+            return View(viewModel);
         }
 
-        // GET: Devices/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (device == null)
-            {
-                return NotFound();
-            }
-
-            return View(device);
-        }
 
         // GET: Devices/Create
         public IActionResult Create()
@@ -53,67 +47,21 @@ namespace SladjanCMSAzure.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,IsConnected,UserId")] Device device)
+        public async Task<IActionResult> Create(DeviceCreate viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(device);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(device);
-        }
-
-        // GET: Devices/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var device = await _context.Devices.FindAsync(id);
-            if (device == null)
-            {
-                return NotFound();
-            }
-            return View(device);
-        }
-
-        // POST: Devices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,IsConnected,UserId")] Device device)
-        {
-            if (id != device.Id)
-            {
-                return NotFound();
-            }
+            var model = mapper.Map<Device>(viewModel);
+            //model.UserId = userManager.GetUserId(User);
+            model.IsConnected = false;
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(device);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DeviceExists(device.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await sqlService.AddAsync(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(viewModel);
         }
+
+
 
         // GET: Devices/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -123,14 +71,14 @@ namespace SladjanCMSAzure.Controllers
                 return NotFound();
             }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (device == null)
+            var model = mapper.Map<DeviceRemove>(await sqlService.GetDeviceAsync((int)id));
+
+            if (model == null)
             {
                 return NotFound();
             }
 
-            return View(device);
+            return View(model);
         }
 
         // POST: Devices/Delete/5
@@ -138,15 +86,18 @@ namespace SladjanCMSAzure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var device = await _context.Devices.FindAsync(id);
-            _context.Devices.Remove(device);
-            await _context.SaveChangesAsync();
+            var device = await sqlService.GetDeviceAsync(id);
+            await sqlService.RemoveAsync(device);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeviceExists(int id)
+
+        public async Task<IActionResult> ToggleDeviceStatus(int id)
         {
-            return _context.Devices.Any(e => e.Id == id);
+            var device = await sqlService.GetDeviceAsync(id);
+            device.IsConnected = !device.IsConnected;
+            await sqlService.UpdateAsync(device);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

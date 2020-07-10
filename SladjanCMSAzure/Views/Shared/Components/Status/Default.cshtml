@@ -1,0 +1,18 @@
+﻿@model Status
+
+@{
+    var commons = "https://upload.wikimedia.org/wikipedia/commons/";
+    var green = commons + "9/97/Eo_circle_light-green_circle.svg";
+    var red = commons + "b/b5/Eo_circle_red_circle.svg";
+}
+
+<span class="circles">
+    @if (Model.IsConnected)
+    {
+        <img src="@green" />
+    }
+    else
+    {
+        <img src="@red" />
+    }
+</span>
