@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SladjanCMSAzure.Data;
 using SladjanCMSAzure.Models;
 using SladjanCMSAzure.Services;
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SladjanCMSAzure.Data;
 using SladjanCMSAzure.Models;
 using SladjanCMSAzure.Models.ViewModels;
+using SladjanCMSAzure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +12,14 @@ namespace SladjanCMSAzure.Views.ViewComponents
 {
     public class StatusViewComponent : ViewComponent
     {
-        private readonly SQLdbContext context;
-
-        public StatusViewComponent(SQLdbContext context)
+        private readonly ISqlService sqlService;
+        public StatusViewComponent(ISqlService sqlService)
         {
-            this.context = context;
+            this.sqlService = sqlService;
         }
         public async Task<IViewComponentResult> InvokeAsync(int deviceId)
         {
-            var device = await context.Devices.FindAsync(deviceId);
+            var device = await sqlService.GetDeviceAsync(deviceId);
 
             var model = new Status()
             {

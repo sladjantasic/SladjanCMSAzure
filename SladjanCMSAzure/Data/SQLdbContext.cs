@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using SladjanCMSAzure.Models;
 
-namespace SladjanCMSAzure.Models
+namespace SladjanCMSAzure.Data
 {
     public partial class SQLdbContext : DbContext
     {
@@ -29,13 +30,9 @@ namespace SladjanCMSAzure.Models
         {
             modelBuilder.Entity<Device>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description).HasMaxLength(300);
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(30);
+                entity.Property(e => e.Name).HasMaxLength(30);
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
             });
