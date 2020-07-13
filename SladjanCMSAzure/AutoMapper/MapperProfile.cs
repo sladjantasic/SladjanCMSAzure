@@ -15,6 +15,8 @@ namespace SladjanCMSAzure.AutoMapper
             CreateMap<Device, DeviceIndex>();
             CreateMap<DeviceCreate, Device>();
             CreateMap<Device, DeviceRemove>();
+
+            CreateMap<DeviceCreate, CosmosDevice>();
         }
     }
 }

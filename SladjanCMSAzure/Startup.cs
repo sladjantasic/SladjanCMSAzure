@@ -15,11 +15,28 @@ using Microsoft.Extensions.Hosting;
 using SladjanCMSAzure.Data;
 using SladjanCMSAzure.Models;
 using SladjanCMSAzure.Services;
+using Microsoft.Azure.Cosmos;
 
 namespace SladjanCMSAzure
 {
     public class Startup
     {
+        private static async Task<CosmosService> InitCosmosClientAsync(IConfigurationSection configurationSection)
+        {
+            string databaseName = configurationSection.GetSection("DatabaseName").Value;
+            string containerName = configurationSection.GetSection("ContainerName").Value;
+            string account = configurationSection.GetSection("Account").Value;
+            string key = configurationSection.GetSection("Key").Value;
+
+            CosmosClient client = new CosmosClient(account, key);
+            CosmosService cosmosService = new CosmosService(client, databaseName, containerName);
+            DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
+            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
+
+            return cosmosService;
+        }
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,6 +51,7 @@ namespace SladjanCMSAzure
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
             services.AddScoped<ISqlService, SqlService>();
+            services.AddSingleton<ICosmosService>(InitCosmosClientAsync(Configuration.GetSection("CosmosDB")).GetAwaiter().GetResult());
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAutoMapper(typeof(Startup));
