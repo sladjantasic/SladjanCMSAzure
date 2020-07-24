@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="3.1.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SladjanCMSAzure\SladjanCMSAzure.csproj" />
+  </ItemGroup>
+
 </Project>
