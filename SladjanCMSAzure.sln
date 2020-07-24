@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SladjanCMSAzure", "SladjanCMSAzure\SladjanCMSAzure.csproj", "{0C315308-68AC-4DE9-A9DB-B5DFC18B8DD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SladjanCMSAzure", "SladjanCMSAzure\SladjanCMSAzure.csproj", "{0C315308-68AC-4DE9-A9DB-B5DFC18B8DD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMSApi", "CMSApi\CMSApi.csproj", "{FCBE13D5-C8A6-4AB8-ABCA-1421BB846E9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0C315308-68AC-4DE9-A9DB-B5DFC18B8DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C315308-68AC-4DE9-A9DB-B5DFC18B8DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C315308-68AC-4DE9-A9DB-B5DFC18B8DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCBE13D5-C8A6-4AB8-ABCA-1421BB846E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCBE13D5-C8A6-4AB8-ABCA-1421BB846E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCBE13D5-C8A6-4AB8-ABCA-1421BB846E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCBE13D5-C8A6-4AB8-ABCA-1421BB846E9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
