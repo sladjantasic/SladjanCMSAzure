@@ -26,7 +26,7 @@ namespace SladjanCMSAzure
             string databaseName = configurationSection.GetSection("DatabaseName").Value;
             string containerName = configurationSection.GetSection("ContainerName").Value;
             string account = configurationSection.GetSection("Account").Value;
-            string key = configurationSection.GetSection("Key").Value;
+            string key = Environment.GetEnvironmentVariable("CosmosKey");
 
             CosmosClient client = new CosmosClient(account, key);
             CosmosService cosmosService = new CosmosService(client, databaseName, containerName);
