@@ -47,7 +47,7 @@ namespace SladjanCMSAzure
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SQLdbContext>(opt => opt.UseSqlServer(Environment.GetEnvironmentVariable("SqlConnection")));
+            services.AddDbContext<SQLdbContext>(opt => opt.UseSqlServer("Server=tcp:sladjansql.database.windows.net,1433;Initial Catalog=SQLdb;Persist Security Info=False;User ID=dbAdmin;Password=Admin123!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
             services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
                 .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
             services.AddScoped<ISqlService, SqlService>();

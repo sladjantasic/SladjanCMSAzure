@@ -24,11 +24,11 @@ namespace SladjanCMSAzure.Controllers
 
 
         // GET: CosmosDevicesController
-        public async Task<IActionResult> Index()
+        public async Task<ActionResult<IEnumerable<CosmosDeviceIndex>>> Index()
         {
             var viewModel = await cosmosService.GetDevicesAsync("SELECT * FROM c");
 
-            return View(viewModel);
+            return View(mapper.Map<IEnumerable<CosmosDeviceIndex>>(viewModel));
         }
 
         // GET: CosmosDevicesController/Create
